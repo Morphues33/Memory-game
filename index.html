@@ -1,43 +1,49 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Memory game - Arduino Project</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memory Game - Arduino Project</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-    <header class="hero">
-        <div class="container">
-            <h1>Memory game con Arduino</h1>
-            <p>Un gioco di memoria con LED, pulsanti e suoni. </p>
-            <a href="https://github.com/Morphues33/Memory-game/tree/main" target="_blank" class="btn">🔗 Vedi su GitHub</a>
-        </div>
-    </header>
+  <header class="hero">
+    <div class="container">
+      <h1>Memory Game con Arduino</h1>
+      <p>Un gioco di memoria con LED, pulsanti e suoni.</p>
+      <a href="https://github.com/Morphues33/Memory-game/tree/main" target="_blank" class="btn">
+        🔗 Vedi su GitHub
+      </a>
+    </div>
+  </header>
 
-    <main class="container">
-        <section class="card">
-            <h2>📌 Cos'è un memory game</h2>
-            <img src="18a41bbd-172b-4714-b9b0-d9ee6c06e4eb.jpg" alt="Arduino Memory Game Setup">
-            <p>Il Memory Game è un gioco di memoria che sfida i riflessi e la concentrazione dei giocatori. Una sequenza di colori viene mostrata tramite LED luminosi: il giocatore deve memorizzarla e ripeterla nello stesso ordine. Ad ogni turno, la sequenza diventa più lunga e complessa, mettendo alla prova la capacità di ricordare rapidamente. È un'attività divertente e stimolante, ideale per allenare la mente in modo semplice e interattivo.</p>
-        </section>
+  <main class="container">
+    <section class="card">
+      <h2>📌 Cos'è un Memory Game</h2>
+      <p>
+        Il Memory Game è un gioco di memoria che sfida i riflessi e la concentrazione dei giocatori.
+        Una sequenza di colori viene mostrata tramite LED luminosi: il giocatore deve memorizzarla e ripeterla nello stesso ordine.
+        Ad ogni turno, la sequenza diventa più lunga e complessa, mettendo alla prova la capacità di ricordare rapidamente.
+        È un'attività divertente e stimolante, ideale per allenare la mente in modo semplice e interattivo.
+      </p>
+    </section>
 
-        <section class="card">
-            <h2>🧰 Componenti Necessari</h2>
-            <ul class="components">
-                <li>4x LED </li>
-                <li>4x Pulsanti</li>
-                <li>1x Buzzer</li>
-                <li>Arduino Uno</li>
-                <li>Breadboard e jumper</li>
-                <li>Schermo Oled</li>
-            </ul>
-        </section>
+    <section class="card">
+      <h2>🧰 Componenti Necessari</h2>
+      <ul class="components">
+        <li>4x LED</li>
+        <li>4x Pulsanti</li>
+        <li>1x Buzzer</li>
+        <li>Arduino Uno</li>
+        <li>Breadboard e jumper</li>
+        <li>Schermo OLED</li>
+      </ul>
+    </section>
 
-        <section class="card">
-            <h2>💡 Esempio di Codice</h2>
-            <pre><code>#define SCREEN_WIDTH 128
-#include &lt;Wire.h&gt;
+    <section class="card">
+      <h2>💡 Esempio di Codice</h2>
+      <pre><code>#include &lt;Wire.h&gt;
 #include &lt;Adafruit_GFX.h&gt;
 #include &lt;Adafruit_SSD1306.h&gt;
 
@@ -58,6 +64,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 const byte ledPins[] = {10, 3, 13, 5};
 const byte buttonPins[] = {9, 2, 12, 6};
 const int tones[] = {294, 370, 440, 523};
+
 #define BUZZER_PIN 4
 
 byte sequence[MAX_ROUNDS];
@@ -65,20 +72,23 @@ byte currentRound = 0;
 int score = 0;
 
 bool isButtonPressed(byte pin) {
-    if (digitalRead(pin) == LOW) {
-        delay(50);
-        return digitalRead(pin) == LOW;
-    }
-    return false;
+  if (digitalRead(pin) == LOW) {
+    delay(50);
+    return digitalRead(pin) == LOW;
+  }
+  return false;
 }
 </code></pre>
-        </section>
-    </main>
+    </section>
+  </main>
 
-    <footer>
-        <div class="container">
-            <p>Creato Da Nadir e Praise| <a href="https://github.com/Morphues33/Memory-game/tree/main" target="_blank">Morpheus</a></p>
-        </div>
-    </footer>
+  <footer>
+    <div class="container">
+      <p>
+        Creato da Nadir e Praise | 
+        <a href="https://github.com/Morphues33/Memory-game/tree/main" target="_blank">Morpheus</a>
+      </p>
+    </div>
+  </footer>
 </body>
 </html>
