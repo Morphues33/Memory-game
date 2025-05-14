@@ -36,30 +36,40 @@
     <section class="card">
       <h2>💡 Esempio di Codice</h2>
       <pre><code>#define SCREEN_WIDTH 128
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
-#define OLED_ADDR 0x3C  // Cambia in 0x3D se necessario
+#define OLED_ADDR 0x3C
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-#define MAX_ROUNDS 13
-#define ENTRY_TIME_LIMIT 5000
+#define MAX_ROUNDS 10
+#define ENTRY_TIME_LIMIT 4000
 
-const byte ledPins[4] = {10, 3, 13, 5};     // Rosso, Verde, Blu, Giallo
-const byte buttonPins[4] = {9, 2, 12, 6};   // Rosso, Verde, Blu, Giallo
+#define RED 0
+#define GREEN 1
+#define BLUE 2
+#define YELLOW 3
 
-#define BUZZER1 4
-#define BUZZER2 7
+const byte ledPins[] = {10, 3, 13, 5};
+const byte buttonPins[] = {9, 2, 12, 6};
+const int tones[] = {294, 370, 440, 523};
+#define BUZZER_PIN 4
 
 byte sequence[MAX_ROUNDS];
 byte currentRound = 0;
+int score = 0;
 
-void setup() {
-  Serial.begin(9600);
-
-  for (byte i = 0; i < 4; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    pinMode(buttonPins[i], INPUT_PULLUP);
+bool isButtonPressed(byte pin) {
+  if (digitalRead(pin) == LOW) {
+    delay(50);
+    return digitalRead(pin) == LOW;
   }
+  return false;
+}
 </code></pre>
     </section>
   </main>
