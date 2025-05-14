@@ -1,4 +1,4 @@
-/* Imposta il margine a 0 per rimuovere gli spazi predefiniti e applica il font 'Orbitron' */
+/* Imposta il margine a 0 per rimuovere gli spazi predefiniti e applica il font */
 body {
   margin: 0;  /* Rimuove il margine predefinito */
   font-family: 'Orbitron', sans-serif;  /* Imposta il font 'Orbitron' */
@@ -25,8 +25,8 @@ a:hover {
   padding: 32px;  /* Aggiunge padding all'interno del contenitore */
 }
 
-/* Hero section (sezione di introduzione) */
-.hero {
+/* Morfeo section (sezione di introduzione) */
+.morfeo {
   background: linear-gradient(135deg, #00e5ff 0%, #2979ff 100%);  /* Sfondo a gradiente dall'azzurro chiaro all'azzurro più scuro */
   color: #000;  /* Imposta il colore del testo a nero */
   text-align: center;  /* Centra il testo */
@@ -36,14 +36,14 @@ a:hover {
   box-shadow: 0 0 40px #00e5ff55;  /* Aggiunge una leggera ombra azzurra */
 }
 
-/* Stili per l'intestazione principale nella sezione Hero */
-.hero h1 {
+/* Stili per l'intestazione principale nella sezione Morfeo */
+.morfeo h1 {
   font-size: 48px;  /* Imposta una grande dimensione del font */
   margin-bottom: 16px;  /* Aggiunge margine inferiore */
 }
 
-/* Stili per il paragrafo nella sezione Hero */
-.hero p {
+/* Stili per il paragrafo nella sezione Morfeo */
+.morfeo p {
   font-size: 19.2px;  /* Imposta la dimensione del font per il paragrafo */
   margin-bottom: 32px;  /* Aggiunge margine inferiore */
 }
