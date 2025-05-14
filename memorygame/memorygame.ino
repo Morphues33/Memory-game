@@ -1,153 +1,167 @@
-#include <Wire.h>  // Libreria per la comunicazione I2C (necessaria per il display OLED)
-#include <Adafruit_GFX.h>  // Libreria grafica generica Adafruit (necessaria per gestire scritte e grafica)
-#include <Adafruit_SSD1306.h>  // Libreria specifica per il display OLED SSD1306
+#include <Wire.h>              // Libreria per la comunicazione I2C
+#include <Adafruit_GFX.h>       // Libreria base per la grafica di Adafruit
+#include <Adafruit_SSD1306.h>   // Libreria specifica per il display OLED SSD1306
 
-#define SCREEN_WIDTH 128  // Larghezza del display OLED in pixel
-#define SCREEN_HEIGHT 64  // Altezza del display OLED in pixel
-#define OLED_ADDR 0x3C  // Indirizzo I2C standard del display OLED
+// Definizione delle dimensioni dello schermo OLED
+#define SCREEN_WIDTH 128        // Larghezza dello schermo OLED
+#define SCREEN_HEIGHT 64        // Altezza dello schermo OLED
 
-// Creazione dell’oggetto display con le dimensioni specificate
+// Definizione dell'indirizzo I2C del display OLED
+#define OLED_ADDR 0x3C          // Indirizzo I2C del display OLED
+
+// Inizializzazione dell'oggetto display OLED
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-#define MAX_ROUNDS 10  // Numero massimo di turni del gioco
-#define ENTRY_TIME_LIMIT 4000  // Tempo massimo (in millisecondi) per rispondere a ogni input
+// Definizione del numero massimo di round del gioco
+#define MAX_ROUNDS 10           // Numero massimo di round
 
-// Definizione simbolica dei colori (indici per array)
-#define RED 0
-#define GREEN 1
-#define BLUE 2
-#define YELLOW 3
+// Definizione del limite di tempo in millisecondi per l'inserimento di un input
+#define ENTRY_TIME_LIMIT 4000   // Tempo limite per inserire l'input (in millisecondi)
 
-// Array con i pin collegati ai LED colorati
-const byte ledPins[] = {10, 3, 13, 5};
-// Array con i pin collegati ai pulsanti (associati ai colori)
-const byte buttonPins[] = {9, 2, 12, 6};
-// Toni corrispondenti a ciascun colore (in Hz) per il buzzer
-const int tones[] = {294, 370, 440, 523};
+// Definizione di costanti per i colori/indici dei LED
+#define RED 0                    // Indice per il LED rosso
+#define GREEN 1                  // Indice per il LED verde
+#define BLUE 2                   // Indice per il LED blu
+#define YELLOW 3                 // Indice per il LED giallo
 
-#define BUZZER_PIN 4  // Pin a cui è collegato il buzzer
+// Array contenente i pin digitali collegati ai LED
+const byte ledPins[] = {10, 3, 13, 5};  // Pin dei LED
 
-byte sequence[MAX_ROUNDS];  // Array per memorizzare la sequenza da ripetere
-byte currentRound = 0;  // Tiene traccia del round attuale
-int score = 0;  // Punteggio dell'utente
+// Array contenente i pin digitali collegati ai pulsanti (con resistenza di pull-up interna)
+const byte buttonPins[] = {9, 2, 12, 6};  // Pin dei pulsanti
 
-// Funzione per verificare se un pulsante è premuto
+// Array contenente le frequenze sonore (in Hz) associate a ciascun colore/LED
+const int tones[] = {294, 370, 440, 523};  // Frequenze sonore
+
+// Definizione del pin digitale collegato al buzzer
+#define BUZZER_PIN 4            // Pin del buzzer
+
+// Array per memorizzare la sequenza di colori/LED da indovinare
+byte sequence[MAX_ROUNDS];  // Sequenza da indovinare
+
+// Variabile per tenere traccia del round corrente
+byte currentRound = 0;      // Round attuale
+
+// Variabile per memorizzare il punteggio del giocatore
+int score = 0;              // Punteggio del giocatore
+
+// Funzione per verificare se un pulsante è stato premuto (debounce incluso)
 bool isButtonPressed(byte pin) {
-  if (digitalRead(pin) == LOW) {  // I pulsanti sono attivi LOW (premuti = LOW)
-    delay(50);  // Ritardo per evitare rimbalzi (debounce)
-    return digitalRead(pin) == LOW;  // Controlla di nuovo per confermare la pressione
+  if (digitalRead(pin) == LOW) {  // Se il pulsante è premuto (LOW con INPUT_PULLUP)
+    delay(50);  // Ritardo per il debounce
+    return digitalRead(pin) == LOW;  // Verifica che il pulsante sia ancora premuto
   }
-  return false;  // Se non è stato premuto
+  return false;  // Se il pulsante non è premuto
 }
 
-// Accende o spegne il LED indicato (on = true/false)
+// Funzione per fornire un feedback visivo accendendo o spegnendo un LED
 void visualFeedback(byte index, bool on) {
-  digitalWrite(ledPins[index], on);  // Imposta lo stato del pin LED
+  digitalWrite(ledPins[index], on);  // Accende o spegne il LED
 }
 
-// Emette un suono e accende brevemente il LED corrispondente
+// Funzione per fornire un feedback sonoro e visivo quando un pulsante viene premuto
 void toneFeedback(byte index) {
-  visualFeedback(index, HIGH);  // Accende il LED
-  tone(BUZZER_PIN, tones[index], 100);  // Suona la nota per 100 ms
-  delay(100);  // Attende mentre suona
-  noTone(BUZZER_PIN);  // Ferma il suono
-  delay(200);  // Pausa prima di spegnere il LED
-  visualFeedback(index, LOW);  // Spegne il LED
-  delay(100);  // Ulteriore pausa prima di continuare
+  visualFeedback(index, HIGH);        // Accende il LED corrispondente
+  tone(BUZZER_PIN, tones[index], 100);  // Emette il suono per 100 ms
+  delay(100);                         // Ritardo per il suono
+  noTone(BUZZER_PIN);                 // Ferma il suono
+  delay(200);                         // Ritardo tra i feedback
+  visualFeedback(index, LOW);         // Spegne il LED
+  delay(100);                         // Ritardo finale
 }
 
-// Mostra un testo centrato sul display OLED
+// Funzione per visualizzare un testo centrato sul display OLED
 void displayCenteredText(String text, int y, int size = 1) {
-  display.setTextSize(size);  // Imposta la dimensione del testo
-  display.setTextColor(WHITE);  // Imposta il colore del testo
-  int16_t x1, y1;
-  uint16_t w, h;
-  display.getTextBounds(text, 0, 0, &x1, &y1, &w, &h);  // Calcola la dimensione del testo
-  display.setCursor((SCREEN_WIDTH - w) / 2, y);  // Posiziona il cursore orizzontalmente centrato
+  display.setTextSize(size);          // Imposta la dimensione del testo
+  display.setTextColor(WHITE);        // Imposta il colore del testo (bianco)
+  int16_t x1, y1;                    // Variabili per i limiti del testo
+  uint16_t w, h;                     // Variabili per la larghezza e l'altezza del testo
+  display.getTextBounds(text, 0, 0, &x1, &y1, &w, &h);  // Ottiene le dimensioni del testo
+  display.setCursor((SCREEN_WIDTH - w) / 2, y);  // Imposta il cursore per centrare il testo
   display.println(text);  // Stampa il testo sul display
 }
 
-// Mostra informazioni di gioco in alto (round e punteggio)
+// Funzione per visualizzare le informazioni di gioco (round corrente e punteggio)
 void displayGameInfo() {
-  display.setTextSize(1);  // Testo piccolo
-  display.setTextColor(WHITE);  // Colore testo
-  display.setCursor(0, 0);  // Posizione in alto a sinistra
-  display.print("Round: ");  // Scrive "Round:"
-  display.print(currentRound);  // Mostra il numero del round
-  display.setCursor(0, 8);  // Riga successiva
-  display.print("Punti: ");  // Scrive "Punti:"
-  display.print(score);  // Mostra il punteggio
+  display.setTextSize(1);          // Imposta la dimensione del testo
+  display.setTextColor(WHITE);     // Imposta il colore del testo
+  display.setCursor(0, 0);         // Imposta il cursore nell'angolo in alto a sinistra
+  display.print("Round: ");        // Stampa "Round:"
+  display.print(currentRound);     // Stampa il round corrente
+  display.setCursor(0, 8);         // Sposta il cursore alla riga successiva
+  display.print("Punti: ");        // Stampa "Punti:"
+  display.print(score);            // Stampa il punteggio
 }
 
-// Mostra un countdown con secondi rimanenti per l'input
+// Funzione per mostrare un conto alla rovescia sul display
 void showCountdown(unsigned long msLeft) {
-  display.clearDisplay();  // Pulisce il display
-  displayGameInfo();  // Mostra round e punteggio
-  displayCenteredText(String((msLeft + 999) / 1000), 32, 2);  // Mostra secondi rimanenti (arrotondati in alto)
-  display.display();  // Aggiorna lo schermo
+  display.clearDisplay();               // Pulisce il display
+  displayGameInfo();                     // Mostra le informazioni di gioco
+  displayCenteredText(String((msLeft + 999) / 1000), 32, 2);  // Mostra il tempo rimanente
+  display.display();                     // Aggiorna il display
 }
 
-// Aspetta che l’utente prema un pulsante, con timeout
+// Funzione per attendere la pressione di un pulsante entro un limite di tempo
 int waitForButton() {
-  long start = millis();  // Salva l'ora iniziale
-  while (millis() - start < ENTRY_TIME_LIMIT) {  // Finché non scade il tempo
+  long start = millis();  // Registra il momento di inizio dell'attesa
+  while (millis() - start < ENTRY_TIME_LIMIT) {  // Controlla finché non scade il tempo
     showCountdown(ENTRY_TIME_LIMIT - (millis() - start));  // Mostra il conto alla rovescia
-    for (byte i = 0; i < 4; i++) {  // Scorre tutti i pulsanti
+    for (byte i = 0; i < 4; i++) {  // Controlla i pulsanti
       if (isButtonPressed(buttonPins[i])) {  // Se il pulsante è premuto
-        toneFeedback(i);  // Suono e LED
-        return i;  // Ritorna il colore premuto
+        toneFeedback(i);  // Fornisce feedback sonoro e visivo
+        return i;          // Restituisce l'indice del pulsante premuto
       }
     }
   }
-  return -1;  // Nessun pulsante premuto entro il tempo
+  return -1;  // Se nessun pulsante è premuto entro il tempo limite
 }
 
-// Riproduce la sequenza di colori e suoni che l’utente deve memorizzare
+// Funzione per riprodurre la sequenza di colori/LED
 void playSequence() {
-  display.clearDisplay();  // Pulisce il display
-  displayGameInfo();  // Mostra punteggio e round
-  displayCenteredText("Memorizza!", 20);  // Messaggio per l’utente
-  display.display();  // Aggiorna display
-  delay(750);  // Attesa prima di iniziare
+  display.clearDisplay();   // Pulisce il display
+  displayGameInfo();         // Mostra le informazioni di gioco
+  displayCenteredText("Memorizza!", 20);  // Mostra il messaggio "Memorizza!"
+  display.display();         // Aggiorna il display
+  delay(750);                // Ritardo prima di iniziare la sequenza
 
-  for (byte i = 0; i < currentRound; i++) {  // Scorre la sequenza da riprodurre
-    toneFeedback(sequence[i]);  // Suona e illumina il colore della sequenza
-    delay(400);  // Pausa tra i segnali
+  for (byte i = 0; i < currentRound; i++) {  // Scorre la sequenza
+    toneFeedback(sequence[i]);  // Fornisce feedback sonoro e visivo per ogni elemento
+    delay(400);                  // Ritardo tra gli elementi
   }
 
-  display.clearDisplay();  // Pulisce il display
-  displayGameInfo();  // Mostra info gioco
-  displayCenteredText("Tocca!", 36);  // Invita l’utente a toccare
-  display.display();  // Aggiorna il display
+  display.clearDisplay();   // Pulisce il display
+  displayGameInfo();         // Mostra le informazioni di gioco
+  displayCenteredText("Tocca!", 36);  // Mostra il messaggio "Tocca!"
+  display.display();         // Aggiorna il display
 }
 
-// Aggiunge un nuovo colore casuale alla sequenza
+// Funzione per aggiungere una nuova mossa casuale alla sequenza
 void addMove() {
-  sequence[currentRound - 1] = random(0, 4);  // Genera numero tra 0 e 3 (colori)
+  sequence[currentRound - 1] = random(0, 4);  // Aggiunge un movimento casuale alla sequenza
 }
 
-// Mostra schermata di vittoria
+// Funzione per l'animazione di vittoria
 void playWinner() {
-  display.clearDisplay();
-  displayCenteredText("Bravo!", 16, 2);  // Messaggio di vittoria
-  displayCenteredText("Punteggio: " + String(score), 40, 1);  // Mostra punteggio
-  display.display();
-  for (int i = 0; i < 4; i++) {  // Animazione vincita
+  display.clearDisplay();  // Pulisce il display
+  displayCenteredText("Bravo!", 16, 2);  // Mostra "Bravo!"
+  displayCenteredText("Punteggio: " + String(score), 40, 1);  // Mostra il punteggio
+  display.display();  // Aggiorna il display
+  for (int i = 0; i < 4; i++) {  // Ciclo per eseguire il feedback visivo e sonoro
     visualFeedback(i, HIGH);
     toneFeedback(i);
     visualFeedback(i, LOW);
     delay(150);
   }
-  delay(2000);  // Attesa finale
+  delay(2000);  // Ritardo finale
 }
 
-// Mostra schermata di errore (sconfitta)
+// Funzione per l'animazione di sconfitta
 void playLoser() {
-  display.clearDisplay();
-  displayCenteredText("Sbagliato!", 16, 2);  // Messaggio di errore
-  displayCenteredText("Punteggio: " + String(score), 40, 1);  // Mostra punteggio
-  display.display();
-  for (int i = 0; i < 2; i++) {  // Animazione errore
+  display.clearDisplay();  // Pulisce il display
+  displayCenteredText("Sbagliato!", 16, 2);  // Mostra "Sbagliato!"
+  displayCenteredText("Punteggio: " + String(score), 40, 1);  // Mostra il punteggio
+  display.display();  // Aggiorna il display
+  for (int i = 0; i < 2; i++) {  // Ciclo per eseguire il feedback visivo e sonoro
     visualFeedback(RED, HIGH);
     visualFeedback(YELLOW, HIGH);
     toneFeedback(RED);
@@ -156,90 +170,89 @@ void playLoser() {
     visualFeedback(YELLOW, LOW);
     delay(250);
   }
-  delay(2000);  // Attesa
+  delay(2000);  // Ritardo finale
 }
 
-// Modalità "attract mode": il gioco aspetta che un giocatore inizi
+// Funzione per la modalità attrattiva (schermata iniziale)
 void attractMode() {
-  display.clearDisplay();
-  displayCenteredText("MEMORY", 10, 2);  // Titolo
-  displayCenteredText("GAME", 35, 2);  // Sottotitolo
-  displayCenteredText("Premi il tasto verde", 55, 1);  // Invito all’utente
-  display.display();
+  display.clearDisplay();  // Pulisce il display
+  displayCenteredText("MEMORY", 10, 2);  // Mostra "MEMORY"
+  displayCenteredText("GAME", 35, 2);    // Mostra "GAME"
+  displayCenteredText("Premi il tasto verde", 55, 1);  // Istruzioni
+  display.display();  // Aggiorna il display
 
-  score = 0;  // Reset punteggio
+  score = 0;  // Resetta il punteggio
 
-  while (true) {  // Ciclo infinito finché non si preme un pulsante
-    for (byte i = 0; i < 4; i++) {
-      visualFeedback(i, HIGH);  // Accende LED
-      delay(150);
-      if (isButtonPressed(buttonPins[i])) {  // Se viene premuto un tasto
-        visualFeedback(i, LOW);  // Spegne LED
-        delay(200);
-        return;  // Esce e inizia il gioco
+  while (true) {  // Ciclo infinito per l'animazione
+    for (byte i = 0; i < 4; i++) {  // Ciclo attraverso i LED
+      visualFeedback(i, HIGH);  
+      delay(150);  
+      if (isButtonPressed(buttonPins[i])) {  // Se un pulsante è premuto
+        visualFeedback(i, LOW);  // Spegne il LED
+        delay(200);  // Ritardo
+        return;  // Esce dalla modalità attrattiva
       }
-      visualFeedback(i, LOW);  // Spegne LED
-      delay(150);
+      visualFeedback(i, LOW);
+      delay(150);  // Ritardo
     }
-    delay(200);  // Pausa tra cicli
+    delay(200);  // Ritardo tra i cicli
   }
 }
 
-// Setup iniziale (eseguito una sola volta all’accensione)
+// Funzione di setup, eseguita una sola volta all'avvio
 void setup() {
-  Serial.begin(9600);  // Avvia comunicazione seriale
-  for (byte i = 0; i < 4; i++) {
-    pinMode(ledPins[i], OUTPUT);  // Imposta LED come output
-    pinMode(buttonPins[i], INPUT_PULLUP);  // Pulsanti con resistenza di pull-up interna
+  Serial.begin(9600);  // Inizializza la comunicazione seriale per il debug
+  for (byte i = 0; i < 4; i++) {  // Configura i pin dei LED come output
+    pinMode(ledPins[i], OUTPUT);
+    pinMode(buttonPins[i], INPUT_PULLUP);  // Configura i pin dei pulsanti come input con pull-up
   }
-  pinMode(BUZZER_PIN, OUTPUT);  // Pin del buzzer come output
+  pinMode(BUZZER_PIN, OUTPUT);  // Configura il pin del buzzer come output
 
-  // Inizializza il display OLED
-  if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR)) {
-    Serial.println("Display non trovato.");  // Messaggio di errore
-    while (1);  // Blocco infinito
+  if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR)) {  // Inizializza il display OLED
+    Serial.println("Display non trovato.");
+    while (1);  // Entra in un ciclo infinito se il display non è trovato
   }
 
-  display.clearDisplay();
-  displayCenteredText("Ciao!", 20, 2);  // Messaggio di benvenuto
-  display.display();
-  delay(1500);  // Pausa
+  display.clearDisplay();  // Pulisce il display
+  displayCenteredText("Ciao!", 20, 2);  // Mostra "Ciao!"
+  display.display();  // Aggiorna il display
+  delay(1500);  // Ritardo iniziale
 }
 
-// Ciclo principale del programma
+// Funzione principale del loop, eseguita continuamente
 void loop() {
-  attractMode();  // Attende che l’utente inizi il gioco
+  attractMode();  // Modalità attrattiva
 
-  display.clearDisplay();
-  displayCenteredText("Inizia!", 20, 2);  // Messaggio di inizio
-  display.display();
-  delay(1000);
+  display.clearDisplay();  // Pulisce il display
+  displayCenteredText("Inizia!", 20, 2);  // Mostra "Inizia!"
+  display.display();  // Aggiorna il display
+  delay(1000);  // Ritardo iniziale
 
-  currentRound = 1;  // Inizia da round 1
-  score = 0;  // Reset punteggio
+  currentRound = 1;  // Inizializza il round corrente
+  score = 0;         // Resetta il punteggio
 
-  while (currentRound <= MAX_ROUNDS) {  // Continua finché non si completano i round
+  while (currentRound <= MAX_ROUNDS) {  // Ciclo principale del gioco
     addMove();  // Aggiunge una nuova mossa alla sequenza
-    playSequence();  // Mostra la sequenza all’utente
+    playSequence();  // Riproduce la sequenza
 
-    for (byte i = 0; i < currentRound; i++) {  // Controlla gli input dell’utente
-      int playerInput = waitForButton();  // Attende risposta
-      if (playerInput != sequence[i]) {  // Se la risposta è sbagliata
-        playLoser();  // Mostra errore
-        delay(2000);
-        return;  // Termina il gioco
+    for (byte i = 0; i < currentRound; i++) {  // Ciclo per l'input del giocatore
+      int playerInput = waitForButton();  // Attende l'input del giocatore
+      if (playerInput != sequence[i]) {  // Se l'input è errato
+        playLoser();  // Esegue l'animazione di sconfitta
+        delay(2000);  // Ritardo
+        return;  // Ritorna alla modalità attrattiva
       }
     }
 
-    score++;  // Aggiunge punto al punteggio
-    display.clearDisplay();
-    displayCenteredText("Corretto!", 20, 2);  // Messaggio di conferma
-    displayCenteredText("+1 Punto", 40, 1);
-    display.display();
-    currentRound++;  // Passa al turno successivo
-    delay(1200);
+    score++;  // Incrementa il punteggio
+    display.clearDisplay();  // Pulisce il display
+    displayCenteredText("Corretto!", 20, 2);  // Mostra "Corretto!"
+    displayCenteredText("+1 Punto", 40, 1);  // Mostra "+1 Punto"
+    display.display();  // Aggiorna il display
+    currentRound++;  // Passa al round successivo
+    delay(1200);  // Ritardo tra i round
   }
 
-  playWinner();  // L’utente ha completato tutti i round
-  delay(2000);
+  playWinner();  // Esegue l'animazione di vittoria
+  delay(2000);  // Ritardo finale
 }
