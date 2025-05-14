@@ -1,97 +1,119 @@
-/* Imposta lo stile generale della pagina */
+/* Imposta il margine a 0 per rimuovere gli spazi predefiniti e applica il font 'Orbitron' */
 body {
-  font-family: 'Orbitron', sans-serif; /*font*/
-  background-color: #0d0d0d; /* Sfondo uniforme scuro */
-  color: #e0f7fa; /* Colore per il testo */
-  margin: 0; /* Rimuove il margine  */
+  margin: 0;  /* Rimuove il margine predefinito */
+  font-family: 'Orbitron', sans-serif;  /* Imposta il font 'Orbitron' */
+  background: linear-gradient(160deg, #0d0d0d 0%, #1a1a1a 100%);  /* Imposta uno sfondo a gradiente scuro */
+  color: #e0f7fa;  /* Imposta il colore del testo a una tonalità di azzurro */
 }
-/* Stile per i link */
+
+/* Stili per i link */
 a {
-  color: #00e5ff; /* Colore azzurro per i link */
+  text-decoration: none;  /* Rimuove la sottolineatura dai link */
+  color: #00e5ff;  /* Imposta il colore del link a un azzurro brillante */
+  transition: 0.3s;  /* Aggiunge una transizione di 0.3 secondi per gli effetti */
 }
 
-/* Contenitore centrale per il contenuto */
+/* Effetto hover sui link: cambia colore quando il cursore è sopra */
+a:hover {
+  color: #18ffff;  /* Cambia il colore del link in un azzurro più chiaro */
+}
+
+/* Contenitore principale con larghezza massima di 960px, centrato e con padding */
 .container {
-  max-width: 960px; /* Larghezza massima */
-  margin: auto; /* Centra il contenitore */
-  padding: 32px; /* Spaziatura interna */
+  max-width: 960px;  /* Imposta la larghezza massima del contenitore */
+  margin: auto;  /* Centra il contenitore orizzontalmente */
+  padding: 32px;  /* Aggiunge padding all'interno del contenitore */
 }
 
-/* Sezione principale “morfeo” */
-.morfeo {
-  background-color: #00b0ff; /* Sfondo  azzurro */
-  color: #000; /* Testo nero */
-  text-align: center; /* Centra il contenuto */
-  padding: 64px 32px; /* Spaziatura interna */
+/* Hero section (sezione di introduzione) */
+.hero {
+  background: linear-gradient(135deg, #00e5ff 0%, #2979ff 100%);  /* Sfondo a gradiente dall'azzurro chiaro all'azzurro più scuro */
+  color: #000;  /* Imposta il colore del testo a nero */
+  text-align: center;  /* Centra il testo */
+  padding: 64px 32px;  /* Aggiunge padding interno */
+  border-bottom-left-radius: 32px;  /* Raggiatura dell'angolo in basso a sinistra */
+  border-bottom-right-radius: 32px;  /* Raggiatura dell'angolo in basso a destra */
+  box-shadow: 0 0 40px #00e5ff55;  /* Aggiunge una leggera ombra azzurra */
 }
 
-/* Titolo all'interno della sezione “morfeo” */
-.morfeo h1 {
-  font-size: 48px; /* Titolo grande */
-  margin-bottom: 16px; /* Spazio sotto il titolo */
+/* Stili per l'intestazione principale nella sezione Hero */
+.hero h1 {
+  font-size: 48px;  /* Imposta una grande dimensione del font */
+  margin-bottom: 16px;  /* Aggiunge margine inferiore */
 }
 
-/* Paragrafo all'interno della sezione “morfeo” */
-.morfeo p {
-  font-size: 19.2px; /* Testo rimpicciolito */
-  margin-bottom: 32px; /* Spazio sotto il paragrafo */
+/* Stili per il paragrafo nella sezione Hero */
+.hero p {
+  font-size: 19.2px;  /* Imposta la dimensione del font per il paragrafo */
+  margin-bottom: 32px;  /* Aggiunge margine inferiore */
 }
 
-/* Stile per i pulsanti */
+/* Pulsante con stile personalizzato */
 .btn {
-  background-color: #000; /* Sfondo nero */
-  color: #00e5ff; /* Testo azzurro */
-  border: 2px solid #00e5ff; /* Bordo azzurro */
-  padding: 12.8px 25.6px; /* Spaziatura interna */
-  border-radius: 30px; /* Angoli molto arrotondati */
-  font-weight: bold; /* Testo in grassetto */
+  background-color: #000;  /* Imposta lo sfondo del pulsante a nero */
+  color: #00e5ff;  /* Imposta il colore del testo a un azzurro brillante */
+  border: 2px solid #00e5ff;  /* Aggiunge un bordo sottile dello stesso colore */
+  padding: 12.8px 25.6px;  /* Imposta il padding orizzontale e verticale */
+  border-radius: 30px;  /* Raggiatura degli angoli per ottenere un effetto arrotondato */
+  font-weight: bold;  /* Imposta il testo in grassetto */
+  transition: all 0.3s ease;  /* Aggiunge una transizione per gli effetti */
+  box-shadow: 0 0 15px #00e5ff44;  /* Aggiunge un'ombra leggera */
 }
 
+/* Effetto hover sul pulsante: cambia colore e intensifica l'ombra */
+.btn:hover {
+  background-color: #00e5ff;  /* Cambia lo sfondo del pulsante in azzurro */
+  color: #000;  /* Cambia il colore del testo in nero */
+  box-shadow: 0 0 20px #00e5ff;  /* Intensifica l'ombra */
+}
 
+/* Card (sezione con contenuto) */
 .card {
-  background: rgba(255, 255, 255, 0.05); /* Sfondo trasparente */
-  border: 1px solid rgba(0, 229, 255, 0.2); /* Bordo azzurrino trasparente */
-  border-radius: 16px; /* Angoli arrotondati */
-  padding: 32px; /* Spaziatura interna */
-  margin-bottom: 32px; /* Spazio sotto ogni card */
-  backdrop-filter: blur(8px); /* Effetto sfocatura vetro */
+  background: rgba(255, 255, 255, 0.05);  /* Sfondo trasparente con una leggera opacità */
+  border: 1px solid rgba(0, 229, 255, 0.2);  /* Bordo azzurro chiaro con opacità */
+  border-radius: 16px;  /* Raggiatura degli angoli */
+  padding: 32px;  /* Padding interno */
+  margin-bottom: 32px;  /* Margine inferiore */
+  backdrop-filter: blur(8px);  /* Sfocatura dello sfondo */
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);  /* Ombra leggera con colore azzurro */
 }
 
-/* Titolo all'interno della scheda */
+/* Titolo all'interno della card */
 .card h2 {
-  color: #00e5ff; /* Colore azzurro brillante */
+  color: #00e5ff;  /* Colore del titolo azzurro */
+  margin-top: 0;  /* Rimuove il margine superiore */
 }
 
-/* Lista di componenti*/
+/* Lista di componenti all'interno della card */
 .components {
-  list-style: none; /* Rimuove i pallini della lista */
-  padding-left: 0; /* Nessun rientro a sinistra */
+  list-style: none;  /* Rimuove i punti elenco */
+  padding-left: 0;  /* Rimuove il padding sinistro */
 }
 
-/* Elementi della lista */
+/* Stili per gli elementi della lista */
 .components li {
-  padding: 8px 0; /* Spazio sopra e sotto ogni elemento */
-  font-size: 16.8px; /* Dimensione del testo */
-  color: #b2ebf2; /* Colore azzurro chiaro */
+  padding: 8px 0;  /* Padding verticale per ogni elemento */
+  font-size: 16.8px;  /* Imposta la dimensione del font */
+  color: #b2ebf2;  /* Colore del testo azzurro chiaro */
 }
 
-/* Stile per i blocchi di codice */
+/* Stili per il blocco di codice */
 pre {
-  background-color: rgba(0, 0, 0, 0.5); /* Sfondo semi-trasparente */
-  padding: 16px; /* Spaziatura interna */
-  border-left: 4px solid #00e5ff; /* Bordo a sinistra evidenziato */
-  border-radius: 8px; /* Angoli arrotondati */
-  overflow-x: auto; /* Scorrimento orizzontale se necessario */
-  color: #c3fdff; /* Colore del testo del codice */
+  background-color: rgba(0, 0, 0, 0.5);  /* Sfondo scuro con opacità */
+  padding: 16px;  /* Padding interno */
+  border-left: 4px solid #00e5ff;  /* Bordo sinistro azzurro */
+  border-radius: 8px;  /* Raggiatura degli angoli */
+  overflow-x: auto;  /* Aggiunge la possibilità di scorrere orizzontalmente */
+  color: #c3fdff;  /* Colore del testo chiaro */
 }
 
-/* Footer della pagina */
+/* Stili per il footer */
 footer {
-  background-color: #111; /* Sfondo molto scuro */
-  padding: 16px 0; /* Spaziatura verticale */
-  text-align: center; /* Testo centrato */
-  font-size: 14.4px; /* Testo leggermente più piccolo */
-  color: #777; /* Colore grigio chiaro */
-  border-top: 1px solid #222; /* Bordo superiore */
-  margin-top: 48px; /* Spazio sopra il footer */
+  background-color: #111;  /* Sfondo scuro */
+  padding: 16px 0;  /* Padding verticale */
+  text-align: center;  /* Centra il testo */
+  font-size: 14.4px;  /* Imposta la dimensione del font */
+  color: #777;  /* Colore del testo grigio chiaro */
+  border-top: 1px solid #222;  /* Aggiunge una linea di separazione sopra il footer */
+  margin-top: 48px;  /* Aggiunge un margine superiore */
 }
