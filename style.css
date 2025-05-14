@@ -12,7 +12,6 @@ a {
   color: #00e5ff;  /* Imposta il colore del link a un azzurro brillante */
   transition: 0.3s;  /* Aggiunge una transizione di 0.3 secondi per gli effetti */
 }
-
 /* Effetto hover sui link: cambia colore quando il cursore è sopra */
 a:hover {
   color: #18ffff;  /* Cambia il colore del link in un azzurro più chiaro */
