@@ -1,105 +1,98 @@
+/* Imposta lo stile generale della pagina */
 body {
-  margin: 0;
-  font-family: 'Orbitron', sans-serif;
-  background: linear-gradient(160deg, #0d0d0d 0%, #1a1a1a 100%);
-  color: #e0f7fa;
+  font-family: 'Orbitron', sans-serif; /*font*/
+  background-color: #0d0d0d; /* Sfondo uniforme scuro */
+  color: #e0f7fa; /* Colore per il testo */
+  margin: 0; /* Rimuove il margine  */
 }
 
+/* Stile per i link */
 a {
-  text-decoration: none;
-  color: #00e5ff;
-  transition: 0.3s;
+  color: #00e5ff; /* Colore azzurro per i link */
 }
 
-a:hover {
-  color: #18ffff;
-}
-
+/* Contenitore centrale per il contenuto */
 .container {
-  max-width: 960px;
-  margin: auto;
-  padding: 2rem;
+  max-width: 960px; /* Larghezza massima */
+  margin: auto; /* Centra il contenitore */
+  padding: 32px; /* Spaziatura interna */
 }
 
-/* Header / Hero */
-.hero {
-  background: linear-gradient(135deg, #00e5ff 0%, #2979ff 100%);
-  color: #000;
-  text-align: center;
-  padding: 4rem 2rem;
-  border-bottom-left-radius: 2rem;
-  border-bottom-right-radius: 2rem;
-  box-shadow: 0 0 40px #00e5ff55;
+/* Sezione principale “morfeo” */
+.morfeo {
+  background-color: #00b0ff; /* Sfondo  azzurro */
+  color: #000; /* Testo nero */
+  text-align: center; /* Centra il contenuto */
+  padding: 64px 32px; /* Spaziatura interna */
 }
 
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+/* Titolo all'interno della sezione “morfeo” */
+.morfeo h1 {
+  font-size: 48px; /* Titolo grande */
+  margin-bottom: 16px; /* Spazio sotto il titolo */
 }
 
-.hero p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
+/* Paragrafo all'interno della sezione “morfeo” */
+.morfeo p {
+  font-size: 19.2px; /* Testo rimpicciolito */
+  margin-bottom: 32px; /* Spazio sotto il paragrafo */
 }
 
+/* Stile per i pulsanti */
 .btn {
-  background-color: #000;
-  color: #00e5ff;
-  border: 2px solid #00e5ff;
-  padding: 0.8rem 1.6rem;
-  border-radius: 30px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 15px #00e5ff44;
+  background-color: #000; /* Sfondo nero */
+  color: #00e5ff; /* Testo azzurro */
+  border: 2px solid #00e5ff; /* Bordo azzurro */
+  padding: 12.8px 25.6px; /* Spaziatura interna */
+  border-radius: 30px; /* Angoli molto arrotondati */
+  font-weight: bold; /* Testo in grassetto */
 }
 
-.btn:hover {
-  background-color: #00e5ff;
-  color: #000;
-  box-shadow: 0 0 20px #00e5ff;
-}
 
 .card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 229, 255, 0.2);
-  border-radius: 1rem;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05); /* Sfondo trasparente */
+  border: 1px solid rgba(0, 229, 255, 0.2); /* Bordo azzurrino trasparente */
+  border-radius: 16px; /* Angoli arrotondati */
+  padding: 32px; /* Spaziatura interna */
+  margin-bottom: 32px; /* Spazio sotto ogni card */
+  backdrop-filter: blur(8px); /* Effetto sfocatura vetro */
 }
 
+/* Titolo all'interno della scheda */
 .card h2 {
-  color: #00e5ff;
-  margin-top: 0;
+  color: #00e5ff; /* Colore azzurro brillante */
 }
 
+/* Lista di componenti*/
 .components {
-  list-style: none;
-  padding-left: 0;
+  list-style: none; /* Rimuove i pallini della lista */
+  padding-left: 0; /* Nessun rientro a sinistra */
 }
 
+/* Elementi della lista */
 .components li {
-  padding: 0.5rem 0;
-  font-size: 1.05rem;
-  color: #b2ebf2;
+  padding: 8px 0; /* Spazio sopra e sotto ogni elemento */
+  font-size: 16.8px; /* Dimensione del testo */
+  color: #b2ebf2; /* Colore azzurro chiaro */
 }
 
+/* Stile per i blocchi di codice */
 pre {
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 1rem;
-  border-left: 4px solid #00e5ff;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-  color: #c3fdff;
+  background-color: rgba(0, 0, 0, 0.5); /* Sfondo semi-trasparente */
+  padding: 16px; /* Spaziatura interna */
+  border-left: 4px solid #00e5ff; /* Bordo a sinistra evidenziato */
+  border-radius: 8px; /* Angoli arrotondati */
+  overflow-x: auto; /* Scorrimento orizzontale se necessario */
+  color: #c3fdff; /* Colore del testo del codice */
 }
 
+/* Footer della pagina */
 footer {
-  background-color: #111;
-  padding: 1rem 0;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #777;
-  border-top: 1px solid #222;
-  margin-top: 3rem;
+  background-color: #111; /* Sfondo molto scuro */
+  padding: 16px 0; /* Spaziatura verticale */
+  text-align: center; /* Testo centrato */
+  font-size: 14.4px; /* Testo leggermente più piccolo */
+  color: #777; /* Colore grigio chiaro */
+  border-top: 1px solid #222; /* Bordo superiore */
+  margin-top: 48px; /* Spazio sopra il footer */
 }
